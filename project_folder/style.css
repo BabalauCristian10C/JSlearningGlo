@@ -1,0 +1,26 @@
+body {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    background-color: #738678;
+    height:100vh;
+}
+
+ul {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position:relative;
+    top:25vh;
+}
+li {
+    background-color: #626254;
+    width: 150px;
+    border:1px solid #2f3b2f;
+    min-width: 30px;
+    text-align:center;
+    font-size: 1.3em;
+    color: lightgray;
+    list-style-type: none;
+}
