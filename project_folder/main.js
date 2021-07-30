@@ -1,18 +1,3 @@
-<<<<<<< Updated upstream
-let money, income, addExpenses, deposit, mission, period;
-
-let randArr = ['money','income', 'addExpenses', 'deposit','mission','period'];
-
-let spans = document.getElementsByClassName("varName");
-
-for ( let i = 0; i < randArr.length; i++){
-    spans[i].innerHTML = randArr[i];
-}
-
-alert("success");
-
-console.log(Symbol(4));
-=======
 let num = 266219;
 let numStr = num.toString();
 let product = parseInt(numStr[0], 10);
@@ -25,4 +10,3 @@ console.log(product);
 
 let cuboid = product ** 3;
 console.log(cuboid.toString().substr(0, 2));
->>>>>>> Stashed changes
