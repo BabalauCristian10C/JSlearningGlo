@@ -24,22 +24,19 @@ let appData = {
         appData.addExpenses = addExpenses.toLowerCase().split(', ');
         appData.deposit = confirm('Есть ли у вас депозит?');
             function getExpenses () {
-                let objectExpense = {},
-                    expenseName = prompt("Введите обязательную статью расходов 2?");
+                let expenseName = prompt("Введите обязательную статью расходов 2?");
 
                 do {
                     answer = parseInt(prompt("Во сколько это обойдется?"), 10);
             
                 } while (isNaN(answer));
 
-                objectExpense[expenseName] = answer;
-                return objectExpense;
+                appData.expenses[expenseName] = answer;
+                console.log(appData.expenses);
+                return;
             }
         while (index < 2) {
-            let getExpensesObject = getExpenses();
-            for (let value in getExpensesObject) {
-                appData.expenses[value] = getExpensesObject[value];
-            }
+            getExpenses();
             index ++;
         }    
     },
@@ -48,18 +45,14 @@ let appData = {
     budgetMonth: 0, //задаём через функцию
     expensesMonth: 0, //задаём через функцию
     getExpensesMonth: function (expense1, expense2) {
-        let sum;
-        sum = expense1 + expense2;
-        return sum;
+        appData.expensesMonth = expense1 + expense2;
     },
     getBudget: function (income, expense) {
-        const budgetMonth = income - expense;
-        const budgetDay = budgetMonth / 30; 
-        return [budgetMonth, budgetDay];
+        appData.budgetMonth = income - expense;
+        appData.budgetDay = appData.budgetMonth / 30; 
     },
     getTargetMonth: function (scope, accumulated){
-        const period = Math.ceil(scope/accumulated);
-        return period;
+        appData.period= Math.ceil(scope/accumulated);
     },
     getStatusIncome: function (budgetDay) {
         if (budgetDay > 1200) {
@@ -83,11 +76,9 @@ let budgetTotal;
 appData.asking(); // узнаёт расходы
 let firstExpense = appData.expenses[Object.keys(appData.expenses)[0]],   secondExpense = appData.expenses[Object.keys(appData.expenses)[1]]; 
 
-appData.expensesMonth = appData.getExpensesMonth(firstExpense, secondExpense);
-budgetTotal = appData.getBudget(appData.budget, appData.expensesMonth);
-appData.budgetMonth = budgetTotal[0];
-appData.budgetDay = budgetTotal[1];
-appData.period = appData.getTargetMonth(appData.mission, appData.budgetMonth);
+appData.getExpensesMonth(firstExpense, secondExpense);
+appData.getBudget(appData.budget, appData.expensesMonth);
+appData.getTargetMonth(appData.mission, appData.budgetMonth);
 
 
 console.log("Расходы за месяц " + appData.expensesMonth); // вывод расходов
