@@ -30,14 +30,14 @@ let appData = {
         } while (isNaN(answer));
 
         appData.expenses[expenseName] = answer;
-        return;
+        
     },
     budget: start(),
     budgetDay: 0, //задаём через функцию
     budgetMonth: 0, //задаём через функцию
     expensesMonth: 0, //задаём через функцию
     getExpensesMonth: function (expense1, expense2) {
-        appData.expensesMonth = expense1 + expense2;
+        appData.expensesMonth = Object.values(appData.expenses)[0] + Object.values(appData.expenses)[1];
     },
     getBudget: function () {
         appData.budgetMonth = appData.budget - appData.expensesMonth;
@@ -64,10 +64,8 @@ let appData = {
 appData.asking(); // узнаёт расходы
 appData.getExpenses();
 appData.getExpenses();
-let firstExpense = Object.values(appData.expenses)[0], 
-    secondExpense = Object.values(appData.expenses)[1]; 
 
-appData.getExpensesMonth(firstExpense, secondExpense);
+appData.getExpensesMonth();
 appData.getBudget();
 appData.getTargetMonth();
 
