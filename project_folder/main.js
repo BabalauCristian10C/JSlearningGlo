@@ -39,19 +39,19 @@ let appData = {
     getExpensesMonth: function (expense1, expense2) {
         appData.expensesMonth = expense1 + expense2;
     },
-    getBudget: function (income, expense) {
-        appData.budgetMonth = income - expense;
+    getBudget: function () {
+        appData.budgetMonth = appData.budget - appData.expensesMonth;
         appData.budgetDay = appData.budgetMonth / 30; 
     },
-    getTargetMonth: function (scope, accumulated){
-        appData.period= Math.ceil(scope/accumulated);
+    getTargetMonth: function (){
+        appData.period= Math.ceil(appData.mission/appData.budgetMonth);
     },
-    getStatusIncome: function (budgetDay) {
-        if (budgetDay > 1200) {
+    getStatusIncome: function () {
+        if (appData.budgetDay > 1200) {
             return "У вас высокий уровень дохода";
-        } else if (budgetDay>600 && budgetDay<1200 ) {
+        } else if (appData.budgetDay>600 && appData.budgetDay<1200 ) {
             return "У вас средний уровень дохода";
-        } else if (budgetDay < 600 && budgetDay > 0) {
+        } else if (appData.budgetDay < 600 && appData.budgetDay > 0) {
             return "К сожалению у вас уровень дохода ниже среднего";
         } else {
             return "что то пошло не так";
@@ -68,8 +68,8 @@ let firstExpense = Object.values(appData.expenses)[0],
     secondExpense = Object.values(appData.expenses)[1]; 
 
 appData.getExpensesMonth(firstExpense, secondExpense);
-appData.getBudget(appData.budget, appData.expensesMonth);
-appData.getTargetMonth(appData.mission, appData.budgetMonth);
+appData.getBudget();
+appData.getTargetMonth();
 
 console.log("Расходы за месяц " + appData.expensesMonth); // вывод расходов
 
