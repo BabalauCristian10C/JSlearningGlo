@@ -18,27 +18,19 @@ let appData = {
     mission: 45000,
     period: 0, //задаём через функцию
     asking: function(){
-        let addExpenses = prompt("Перечислите возможные расходы за рассчитываемый период через запятую"),
-            answer,
-            index = 0;
-        appData.addExpenses = addExpenses.toLowerCase().split(', ');
-        appData.deposit = confirm('Есть ли у вас депозит?');
-            function getExpenses () {
-                let expenseName = prompt("Введите обязательную статью расходов 2?");
+        let addExpense = prompt("Перечислите возможные расходы за рассчитываемый период через запятую");
+        appData.addExpenses = addExpense.toLowerCase().split(', ');
+        appData.deposit = confirm('Есть ли у вас депозит?');  
+    },
+    getExpenses: function () {
+        let expenseName = prompt("Введите обязательную статью расходов 2?"),
+            answer;
+        do {
+            answer = parseInt(prompt("Во сколько это обойдется?"), 10);
+        } while (isNaN(answer));
 
-                do {
-                    answer = parseInt(prompt("Во сколько это обойдется?"), 10);
-            
-                } while (isNaN(answer));
-
-                appData.expenses[expenseName] = answer;
-                console.log(appData.expenses);
-                return;
-            }
-        while (index < 2) {
-            getExpenses();
-            index ++;
-        }    
+        appData.expenses[expenseName] = answer;
+        return;
     },
     budget: start(),
     budgetDay: 0, //задаём через функцию
@@ -67,14 +59,13 @@ let appData = {
     }
 };
 
-
-let budgetTotal;
-
-
 // добавил пару переменых для более лёгкого обращения к этим элементам надеюсь ничего страшного
 
 appData.asking(); // узнаёт расходы
-let firstExpense = appData.expenses[Object.keys(appData.expenses)[0]],   secondExpense = appData.expenses[Object.keys(appData.expenses)[1]]; 
+appData.getExpenses();
+appData.getExpenses();
+let firstExpense = Object.values(appData.expenses)[0], 
+    secondExpense = Object.values(appData.expenses)[1]; 
 
 appData.getExpensesMonth(firstExpense, secondExpense);
 appData.getBudget(appData.budget, appData.expensesMonth);
