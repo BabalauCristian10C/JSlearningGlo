@@ -80,7 +80,6 @@ appData.getExpensesMonth(firstExpense, secondExpense);
 appData.getBudget(appData.budget, appData.expensesMonth);
 appData.getTargetMonth(appData.mission, appData.budgetMonth);
 
-
 console.log("Расходы за месяц " + appData.expensesMonth); // вывод расходов
 
 if (appData.period > 0 ){
@@ -91,3 +90,7 @@ if (appData.period > 0 ){
 
 console.log("Бюджет на день: " + appData.budgetDay);
 console.log(appData.getStatusIncome(appData.budgetDay)); // уровень дохода
+
+for (let key in appData) {
+    console.log(key + " : " + appData[key]);
+}
