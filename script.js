@@ -24,14 +24,18 @@ const calculate = document.querySelector('#start'),
     depositAmount = document.querySelector(".deposit-amount"),
     targetAmount = document.querySelector(".target-amount"),
     range = document.querySelector('[type="range"]'),
-    periodSelect = document.querySelector(".period-select");
-    
+    periodSelect = document.querySelector(".period-select"),
+    warningElement = document.createElement("h3");
+warningElement.innerHTML = "Поле Месячный доход пустое";
+warningElement.classList.add("warning")
 
 let expenseElements = document.querySelectorAll(".expenses-items"),
     incomeElements = document.querySelectorAll(".income-items"),
+    titlePlaceHolder = document.querySelectorAll("[placeholder='Наименование']"),
+    summPlaceHolder = document.querySelector('[placeholder="Cумма"]'),
     constE = 0,
-    constI = 0;
-
+    constI = 0,
+    counter = 0;
 
 let appData = {
     income: {},
@@ -54,11 +58,14 @@ let appData = {
                 document.querySelector(".salary-title").style.color = "green";
             }
         } else {
-            event.preventDefault();
-            document.querySelector("h1").insertAdjacentHTML("afterend",`<h3 class = "warning" style = "text-align:center; color:red"> Поле Месячный доход пустое</h3>`);
-            
+            counter++;
+            if (counter<2){
+            document.querySelector("h1").after(warningElement);
             document.querySelector(".salary-title").style.color = "red";
-            alert("Salary Amount field is empty");
+            } else {
+                return 0;
+            }
+            return 0;
         }
         // appData.getInfoDeposit();
         appData.getExpensesTemp();
@@ -124,11 +131,6 @@ let appData = {
         if (constI === 2){
             incomePlus.style.display = "none";
         }
-    },
-    asking: function(){
-        let addExpense = prompt("Перечислите возможные расходы за рассчитываемый период через запятую", "не важно");
-        appData.addExpenses = addExpense.toLowerCase().split(', ');
-        appData.deposit = confirm('Есть ли у вас депозит?');  
     },
     budget: 0,
     budgetDay: 0, 
@@ -237,16 +239,10 @@ periodSelect.addEventListener('mousemove', function(){
     document.getElementsByClassName("period-amount")[0].innerHTML = periodSelect.value;
 });
 
+// summPlaceHolder.forEach(function(item){
+//     console.log(item);
+//     item.addEventListener('click', function(event){
+//     console.log(event);
+//     });
+// });
 
-
-if (appData.period > 0 ){
-    console.log("Цель будет достигнута через " + appData.period + " месяцу / месяцев");
-} else {
-    console.log("Цель не будет достигнут ");
-} // вывод периода
-
-
-appData.addExpenses.forEach(function(item,i){
-    appData.addExpensesOnestring += item.charAt(0).toUpperCase() + item.slice(1) + ", ";
-});
-console.log(appData.addExpensesOnestring);
