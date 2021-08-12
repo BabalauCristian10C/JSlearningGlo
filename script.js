@@ -32,7 +32,7 @@ warningElement.classList.add("warning")
 let expenseElements = document.querySelectorAll(".expenses-items"),
     incomeElements = document.querySelectorAll(".income-items"),
     titlePlaceHolder = document.querySelectorAll("[placeholder='Наименование']"),
-    summPlaceHolder = document.querySelector('[placeholder="Cумма"]'),
+    summPlaceHolder = document.querySelectorAll('[placeholder="Сумма"]'),
     constE = 0,
     constI = 0,
     counter = 0;
@@ -239,10 +239,32 @@ periodSelect.addEventListener('mousemove', function(){
     document.getElementsByClassName("period-amount")[0].innerHTML = periodSelect.value;
 });
 
-// summPlaceHolder.forEach(function(item){
-//     console.log(item);
-//     item.addEventListener('click', function(event){
-//     console.log(event);
-//     });
-// });
+document.addEventListener("click", function(){
+    summPlaceHolder = document.querySelectorAll('[placeholder="Сумма"]');
+    titlePlaceHolder = document.querySelectorAll("[placeholder='Наименование']"),
+    summPlaceHolder.forEach(function(item){
+        item.addEventListener('keydown', function(event){
+            if (!isNaN(parseInt(event.key))){
+                console.log('all good');
+            } else {
+                console.log("enter a number");
+                event.preventDefault();
+            }
+        });
+    })
+    titlePlaceHolder.forEach(function(item){
+        // http://jrgraphix.net/r/Unicode/0400-04FF
+        const cyrillicPattern = /^[\u0400-\u04FF]+$/;
+        item.addEventListener('keydown', function(event){
+            if (cyrillicPattern.test(event.key)){
+                console.log('all good');
+            } else {
+                console.log("enter a cyrilic symbol");
+                event.preventDefault();
+            }
+        });
+    })
+});
+
+
 
