@@ -27,7 +27,9 @@ const calculate = document.querySelector('#start'),
     periodSelect = document.querySelector(".period-select"),
     warningElement = document.createElement("h3");
 warningElement.innerHTML = "Поле Месячный доход пустое";
-warningElement.classList.add("warning")
+warningElement.classList.add("warning");
+
+
 
 let expenseElements = document.querySelectorAll(".expenses-items"),
     incomeElements = document.querySelectorAll(".income-items"),
@@ -47,7 +49,7 @@ let appData = {
     deposit: false,
     percentDeposit: 0,
     moneyDeposit: 0,
-    period: 0, //задаём через функцию
+    period: 0, //задаём через функцию,
     start: function (event){
         if (salaryAmount.value !== ""){
             appData.budget = salaryAmount.value;
@@ -59,6 +61,7 @@ let appData = {
             }
         } else {
             counter++;
+            console.log(this);
             if (counter<2){
             document.querySelector("h1").after(warningElement);
             document.querySelector(".salary-title").style.color = "red";
@@ -67,6 +70,7 @@ let appData = {
             }
             return 0;
         }
+        console.log(this);
         // appData.getInfoDeposit();
         appData.getExpensesTemp();
         appData.getExpensesMonth();
@@ -80,8 +84,11 @@ let appData = {
         appData.getTargetMonth();
         appData.showInvest();
         appData.showResult();
-        
+        appData.disableInput();
         return;
+    },
+    callThis: function(){
+        console.log(this);
     },
     addExpensesBlock: function(){
         const newExpenseBlock = document.createElement("div");
@@ -131,6 +138,7 @@ let appData = {
         if (constI === 2){
             incomePlus.style.display = "none";
         }
+        console.log(this);
     },
     budget: 0,
     budgetDay: 0, 
@@ -142,19 +150,23 @@ let appData = {
         for (let item of keys){
             appData.expensesMonth += parseInt(appData.expenses[item], 10);
         }
+        console.log(this);
     },
     getIncomeMonth: function(){
         const keys = Object.keys(appData.income);
         for (let item of keys){
             appData.incomeMonth += parseInt(appData.income[item], 10);
         }
+        console.log(this);
     },
     getBudget: function () {
         appData.budgetMonth = parseInt(appData.budget, 10) + appData.incomeMonth - appData.expensesMonth;
         appData.budgetDay = Math.floor(appData.budgetMonth / 30); 
+        console.log(this);
     },
     getTargetMonth: function (){
         appData.period = Math.ceil( targetAmount.value / appData.budgetMonth );
+        console.log(this);
     },
     getStatusIncome: function () {
         if (appData.budgetDay > 1200) {
@@ -166,6 +178,7 @@ let appData = {
         } else {
             return "что то пошло не так";
         }
+        console.log(this);
     },
     getInfoDeposit: function(){
         if(appData.deposit){
@@ -176,13 +189,14 @@ let appData = {
             appData.moneyDeposit = parseInt(prompt("сколько денег на вашем депозитном счету", 5000), 10);
             } while (isNaN(appData.moneyDeposit));
         }
+        console.log(this);
     },
     showResult: function(){
         budgetMonthValue.value = appData.budgetMonth;
         budgetDayValue.value = appData.budgetDay;
         expensesMonthValue.value = appData.expensesMonth;
         targetMonthValue.value = appData.period;
-
+        console.log(this);
     },
     inputExpenseTitle: function(){
         const addExpensesItemTitle = function(){
@@ -198,6 +212,7 @@ let appData = {
                 return 'Пусто';
             }
         };
+        console.log(this);
         addExpensesValue.value = addExpensesItemTitle();
     },
     inputIncomeTitle: function(){
@@ -208,6 +223,7 @@ let appData = {
             substr += item +", ";
         }
         addIncomeValue.value = substr;
+        console.log(this);
     },
     getAddIncomeItem: function(){
         addIncomeItem.forEach(function(item){
@@ -217,15 +233,39 @@ let appData = {
             }
         }
         );
+        console.log(this);
     },
     showInvest:function(){
         appData.getBudget();
         appData.calcMoney();
         incomePeriodValue.value = appData.moneyPeriod;
-        console.log(appData.moneyPeriod);
+        console.log(this);
     },
     calcMoney: function(){
         appData.moneyPeriod = appData.budgetMonth * periodSelect.value;
+        console.log(this);
+    },
+    disableInput: function(){
+        const buttonText = document.querySelectorAll("[type=text]");
+        buttonText.forEach(function(item){
+            item.setAttribute("disabled", "");
+        });
+        calculate.removeEventListener('click', appData.start);
+        calculate.innerHTML = "Сбросить";
+        calculate.addEventListener("click", function reseter(){
+            buttonText.forEach(function(item){
+                item.removeAttribute("disabled");
+                item.value = "";
+            });
+            calculate.innerHTML = "Рассчитать";
+        }, true, true);
+        calculate.removeEventListener("click",function reseter(){
+            buttonText.forEach(function(item){
+                item.removeAttribute("disabled");
+                item.value = "";
+            });
+        })
+        calculate.addEventListener('click', appData.start);
     }
 };
 
@@ -238,33 +278,4 @@ periodSelect.addEventListener('mousemove', function(){
     appData.showInvest();
     document.getElementsByClassName("period-amount")[0].innerHTML = periodSelect.value;
 });
-
-document.addEventListener("click", function(){
-    summPlaceHolder = document.querySelectorAll('[placeholder="Сумма"]');
-    titlePlaceHolder = document.querySelectorAll("[placeholder='Наименование']"),
-    summPlaceHolder.forEach(function(item){
-        item.addEventListener('keydown', function(event){
-            if (!isNaN(parseInt(event.key))){
-                console.log('all good');
-            } else {
-                console.log("enter a number");
-                event.preventDefault();
-            }
-        });
-    })
-    titlePlaceHolder.forEach(function(item){
-        // http://jrgraphix.net/r/Unicode/0400-04FF
-        const cyrillicPattern = /^[\u0400-\u04FF]+$/;
-        item.addEventListener('keydown', function(event){
-            if (cyrillicPattern.test(event.key)){
-                console.log('all good');
-            } else {
-                console.log("enter a cyrilic symbol");
-                event.preventDefault();
-            }
-        });
-    })
-});
-
-
 
