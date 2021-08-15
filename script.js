@@ -50,8 +50,8 @@ let appData = {
     percentDeposit: 0,
     moneyDeposit: 0,
     period: 0, //задаём через функцию,
-    start: function (event){
-        if (salaryAmount.value !== ""){
+    start: function (){
+        if (salaryAmount.value !== "" ){
             appData.budget = salaryAmount.value;
             if (document.querySelector(".warning")){
                 document.querySelectorAll(".warning").forEach(function(item){
@@ -71,7 +71,6 @@ let appData = {
             return 0;
         }
         console.log(this);
-        // appData.getInfoDeposit();
         appData.getExpensesTemp();
         appData.getExpensesMonth();
         appData.getIncomeTemp();
@@ -245,27 +244,51 @@ let appData = {
         appData.moneyPeriod = appData.budgetMonth * periodSelect.value;
         console.log(this);
     },
+    reset: function(){
+        appData.income = {};
+        appData.addIncome = [];
+        appData.expenses = {};
+        appData.addExpenses = [];
+        appData.incomeMonth = 0;
+        appData.addExpensesOnestring = "";
+        appData.deposit = false;
+        appData.percentDeposit = 0;
+        appData.moneyDeposit = 0;
+        appData.period = 0;
+        appData.budget = 0;
+        appData.budgetDay = 0;
+        appData.budgetMonth = 0;
+        appData.expensesMonth = 0; 
+        appData.moneyPeriod = 0;
+        calculate.innerHTML = "Рассчитать";
+    },
     disableInput: function(){
         const buttonText = document.querySelectorAll("[type=text]");
+
         buttonText.forEach(function(item){
             item.setAttribute("disabled", "");
         });
+        
         calculate.removeEventListener('click', appData.start);
         calculate.innerHTML = "Сбросить";
+
         calculate.addEventListener("click", function reseter(){
+            appData.reset();
             buttonText.forEach(function(item){
                 item.removeAttribute("disabled");
                 item.value = "";
             });
-            calculate.innerHTML = "Рассчитать";
-        }, true, true);
-        calculate.removeEventListener("click",function reseter(){
+        }, true);
+
+        calculate.removeEventListener("click", function reseter(){
+            appData.reset();
             buttonText.forEach(function(item){
                 item.removeAttribute("disabled");
                 item.value = "";
             });
-        })
-        calculate.addEventListener('click', appData.start);
+        }, true);
+
+        calculate.addEventListener('mouseover', appData.start);
     }
 };
 
