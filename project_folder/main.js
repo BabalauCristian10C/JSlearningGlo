@@ -1,32 +1,67 @@
 'use strict';
 
 
-let books = document.querySelectorAll(".book"),
-      book2 = books[0],
-      book1 = books[1],
-      book6 = books[2],
-      book4 = books[3],
-      book3 = books[4],
-      book5 = books[5],
-      bookTitles = book2.querySelectorAll("li"),
-      bookTitles2 = book5.querySelectorAll("li"),
-      body = document.body,
-      advertise = document.getElementsByClassName('adv')[0];
+let argumentsElement = [],
+      space = document.getElementsByClassName("created-element")[0];
 
-book1.after(book2);
-book4.before(book3);
-book5.after(book4);
-book5.after(book6);
-book5.before(book4);
+function getArguments(){
+      const inputs = document.querySelectorAll("[type='text']");
+      inputs.forEach(element => {
+            argumentsElement.push(element.value);
+      });
+}
 
-body.style.backgroundImage = "url('image/you-dont-know-js.jpg')";
-//3 -> 1 book title
-bookTitles[3].after(bookTitles[6]);
-bookTitles[6].after(bookTitles[8]);
-bookTitles2[1].after(bookTitles2[9]);
-bookTitles2[6].before(bookTitles2[2]);
 
-book6.getElementsByTagName("li")[8].insertAdjacentHTML("afterend", "<li>Глава 8: За пределами ES6</li>");
-console.log(bookTitles2);
-book3.getElementsByTagName("a")[0].innerHTML = "Книга 3. this и Прототипы Объектов";
-advertise.remove();
+
+const ElementCreator = function(selector, height, width, bg, fontSize){
+      this.selector = selector;
+      this.height = height;
+      this.width =  width;
+      this.bg = bg;
+      this.fontSize = fontSize;
+      this.argsArr = [this.selector, this.height, this.width, this.bg, this.fontSize];
+};
+
+
+ElementCreator.prototype.setAttribute = function(){
+      this.ElementItSelf.style.cssText=
+
+      `
+      height: ${this.height}px;
+      width: ${this.width}px;
+      background-color: ${this.bg};
+      font-size: ${this.fontSize}px;
+      text-align:center;
+      justify-content:space-around;
+      `;
+
+      
+      space.append(this.ElementItSelf);
+};
+
+ElementCreator.prototype.createElement = function(){
+      const selector = this.selector;
+      if (selector[0] === "."){
+            this.ElementItSelf = document.createElement("div");
+            this.ElementItSelf.classList.add(`${selector.slice(1)}`);
+      } else if (selector[0] === "#"){
+            this.ElementItSelf = document.createElement("p");
+            this.ElementItSelf.setAttribute("id", `${selector.slice(1)}`);
+      }else{
+            console.log("The selector you gave is doesn't meet the requirements.");
+            return;
+      }
+      this.ElementItSelf.innerHTML = "<span style = 'display: flex; justify-content: center; flex-direction: column; align-content: space-between; ' >TestEl</span>";
+};
+
+
+
+document.querySelector("button").addEventListener("click", function (event) {
+      getArguments();
+      const DomElement = new ElementCreator(...argumentsElement);
+      DomElement.createElement();
+      DomElement.setAttribute();  
+      event.preventDefault();
+      argumentsElement = [];
+});
+
