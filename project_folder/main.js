@@ -1,42 +1,33 @@
 'use strict';
 
-
-let argumentsElement = [],
-      space = document.getElementsByClassName("created-element")[0];
-
-function getArguments(){
-      const inputs = document.querySelectorAll("[type='text']");
-      inputs.forEach(element => {
-            argumentsElement.push(element.value);
-      });
-}
-
-
-
-const ElementCreator = function(selector, height, width, bg, fontSize){
+let argumentsElement = [".square", "100", "100", "black", "absolute"],
+    space = document.body;
+const ElementCreator = function(selector, height, width, bg, position){
       this.selector = selector;
       this.height = height;
       this.width =  width;
       this.bg = bg;
-      this.fontSize = fontSize;
-      this.argsArr = [this.selector, this.height, this.width, this.bg, this.fontSize];
+      this.position = position;
 };
+
 
 
 ElementCreator.prototype.setAttribute = function(){
       this.ElementItSelf.style.cssText=
-
       `
       height: ${this.height}px;
       width: ${this.width}px;
       background-color: ${this.bg};
-      font-size: ${this.fontSize}px;
+      position: absolute;
       text-align:center;
       justify-content:space-around;
+      left:0px;
+      right:0px;
+      top:0px;
+      bottom:-199px;
       `;
-
-      
       space.append(this.ElementItSelf);
+
 };
 
 ElementCreator.prototype.createElement = function(){
@@ -53,21 +44,26 @@ ElementCreator.prototype.createElement = function(){
             console.log("The selector you gave is doesn't meet the requirements.");
             return;
       }
-      this.ElementItSelf.innerHTML = "<span style = 'display: flex; justify-content: center; flex-direction: column; align-content: space-between; ' >TestEl</span>";
+      this.ElementItSelf.innerHTML = "<span style = 'color:white; text-align: center;' > tetris </span>";
 };
 
 
 
-document.querySelector("button").addEventListener("click", function (event) {
-      if (document.querySelector(".remove")){
-          document.querySelector(".remove").remove();  
-      }
-      
-      getArguments();
-      const DomElement = new ElementCreator(...argumentsElement);
-      DomElement.createElement();
-      DomElement.setAttribute();  
-      event.preventDefault();
-      argumentsElement = [];
-});
+const DomElement = new ElementCreator(...argumentsElement);
 
+DomElement.createElement();
+DomElement.setAttribute();  
+
+window.addEventListener("keydown", function(event){
+      if(event.key === "ArrowUp"){
+            DomElement.ElementItSelf.style.top = (parseInt(DomElement.ElementItSelf.style.top,10) - 10) + "px";
+      } else if (event.key === "ArrowDown"){
+            DomElement.ElementItSelf.style.top = (parseInt(DomElement.ElementItSelf.style.top,10) + 10) + "px";
+      } else if (event.key === "ArrowLeft"){
+            DomElement.ElementItSelf.style.left = (parseInt(DomElement.ElementItSelf.style.left,10) - 10) + "px";
+      } else if (event.key === "ArrowRight"){
+            DomElement.ElementItSelf.style.left = (parseInt(DomElement.ElementItSelf.style.left,10) + 10) + "px";
+      } else {
+            console.log("oops");
+      }
+});
