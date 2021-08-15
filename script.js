@@ -1,6 +1,7 @@
 'use strict';
 
 const calculate = document.querySelector('#start'),
+    cancel = document.querySelector('#cancel'),
     plusButtons = document.getElementsByTagName("button"),
     incomePlus = plusButtons[0],
     expensesPlus = plusButtons[1],
@@ -25,7 +26,8 @@ const calculate = document.querySelector('#start'),
     targetAmount = document.querySelector(".target-amount"),
     range = document.querySelector('[type="range"]'),
     periodSelect = document.querySelector(".period-select"),
-    warningElement = document.createElement("h3");
+    warningElement = document.createElement("h3"),
+    buttonText = document.querySelectorAll("[type=text]");
 warningElement.innerHTML = "Поле Месячный доход пустое";
 warningElement.classList.add("warning");
 
@@ -51,6 +53,8 @@ let appData = {
     moneyDeposit: 0,
     period: 0, //задаём через функцию,
     start: function (){
+        expensesPlus.style.display = "block";
+        incomePlus.style.display = "block";
         if (salaryAmount.value !== "" ){
             appData.budget = salaryAmount.value;
             if (document.querySelector(".warning")){
@@ -262,24 +266,33 @@ let appData = {
         appData.moneyPeriod = 0;
         calculate.innerHTML = "Рассчитать";
     },
-    disableInput: function(){
-        const buttonText = document.querySelectorAll("[type=text]");
-
+    setItemsDisabled: function(){
         buttonText.forEach(function(item){
             item.setAttribute("disabled", "");
         });
-        
-        calculate.removeEventListener('click', appData.start);
-        calculate.innerHTML = "Сбросить";
+    },
+    disableInput: function(){
+        appData.setItemsDisabled();
+        expensesPlus.style.display = "none";
+        incomePlus.style.display = "none";
 
-        calculate.addEventListener("click", function reseter(){
+        calculate.style.display = "none";
+        cancel.style.display = "block";
+        // calculate.removeEventListener('click', appData.start);
+        // calculate.innerHTML = "Сбросить";
+
+        cancel.addEventListener("click", function reseter(){
             appData.reset();
+            expensesPlus.style.display = "block";
+            incomePlus.style.display = "block";
+            calculate.style.display = "block";
+            cancel.style.display = "none";
             buttonText.forEach(function(item){
                 item.removeAttribute("disabled");
                 item.value = "";
             });
         }, true);
-
+        
         calculate.removeEventListener("click", function reseter(){
             appData.reset();
             buttonText.forEach(function(item){
@@ -287,8 +300,7 @@ let appData = {
                 item.value = "";
             });
         }, true);
-
-        calculate.addEventListener('mouseover', appData.start);
+        // calculate.addEventListener('mouseover', appData.start);
     }
 };
 
