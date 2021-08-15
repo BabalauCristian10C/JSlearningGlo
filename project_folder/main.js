@@ -44,9 +44,11 @@ ElementCreator.prototype.createElement = function(){
       if (selector[0] === "."){
             this.ElementItSelf = document.createElement("div");
             this.ElementItSelf.classList.add(`${selector.slice(1)}`);
+            this.ElementItSelf.classList.add(`remove`);
       } else if (selector[0] === "#"){
             this.ElementItSelf = document.createElement("p");
             this.ElementItSelf.setAttribute("id", `${selector.slice(1)}`);
+            this.ElementItSelf.classList.add(`remove`);
       }else{
             console.log("The selector you gave is doesn't meet the requirements.");
             return;
@@ -57,6 +59,10 @@ ElementCreator.prototype.createElement = function(){
 
 
 document.querySelector("button").addEventListener("click", function (event) {
+      if (document.querySelector(".remove")){
+          document.querySelector(".remove").remove();  
+      }
+      
       getArguments();
       const DomElement = new ElementCreator(...argumentsElement);
       DomElement.createElement();
