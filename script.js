@@ -3,6 +3,7 @@
 const calculate = document.querySelector('#start'),
     cancel = document.querySelector('#cancel'),
     plusButtons = document.getElementsByTagName("button"),
+    plusButt = document.querySelectorAll(".btn_plus"),
     incomePlus = plusButtons[0],
     expensesPlus = plusButtons[1],
     checkBox = document.getElementById("deposit-check"),
@@ -82,10 +83,8 @@ class AppData{
             }
             return 0;
         }
-        appData.getExpensesTemp();
-        appData.getExpensesMonth();
-        appData.getIncomeTemp();
-        appData.getIncomeMonth();
+        appData.getExpInc();
+        appData.getExpensesIncomesMonth();
         appData.inputExpenseTitle();
         appData.getBudget();
         appData.getAddIncomeItem();
@@ -98,73 +97,63 @@ class AppData{
         return;
     }
     
-    addExpensesBlock(){
-        const newExpenseBlock = document.createElement("div");
-        newExpenseBlock.classList.add("expenses-items");
-        newExpenseBlock.innerHTML = `  
-        <input type="text" class="expenses-title" placeholder="Наименование">
-        <input type="text" class="expenses-amount" placeholder="Сумма">`;
-        document.querySelector('.expenses').append(newExpenseBlock);
-        constE++;
-        if (constE === 2){
-            expensesPlus.style.display = "none";
-        }
-        expensesPlus.before(newExpenseBlock);  
-    }
+
     
-    getExpensesTemp() {
-        const _this = this;
+    getExpInc(){
         expenseElements = document.querySelectorAll(".expenses-items");
-        expenseElements.forEach(function(item){
-            const expTitle = item.querySelector('.expenses-title').value,
-                  expAmm = item.querySelector('.expenses-amount').value;
-            if (expTitle !== "" && expAmm !== ""){
-                console.log(_this + " " + _this.budget);
-                _this.expenses[expTitle.toString()] = expAmm;
-            } 
-        }
-        );
-    }
-    
-    getIncomeTemp() {
         incomeElements = document.querySelectorAll(".income-items");
-        incomeElements.forEach(function(item){
-            const incTitle = item.querySelector('.income-title').value,
-                  incAmm = item.querySelector('.income-amount').value;
-            if (incTitle !== "" && incAmm !== ""){
-                appData.income[incTitle.toString()] = incAmm;
+        
+        const iterating = item => {
+            const subStr = item.className.split("-")[0];
+            const itemTitle = item.querySelector(`.${subStr}-title`).value,
+                  itemAmmount = item.querySelector(`.${subStr}-amount`).value;
+            if (itemTitle !== "" && itemAmmount !== ""){
+                this[subStr][itemTitle.toString()] = itemAmmount;
             } 
-        }
-        );
+        };
+        expenseElements.forEach(iterating);
+        incomeElements.forEach(iterating);
     }
     
-    addIncomeBlock() {
-        const newExpenseBlock = document.createElement("div");
-        newExpenseBlock.classList.add("income-items");
-        newExpenseBlock.innerHTML = `
-        <input type="text" class="income-title" placeholder="Наименование">
-        <input type="text" class="income-amount" placeholder="Сумма">`;
-        document.querySelector('.income').append(newExpenseBlock);
-        incomePlus.before(newExpenseBlock);  
-        constI++;
-        if (constI === 2){
-            incomePlus.style.display = "none";
+    addExpIncBlock(event){
+        let classes =event.target.classList;
+        const newBlock = document.createElement("div");
+        classes = classes[1].split("_")[0];
+        newBlock.classList.add(classes + "-items");
+        newBlock.innerHTML = `  
+        <input type="text" class="${classes}-title" placeholder="Наименование">
+        <input type="text" class="${classes}-amount" placeholder="Сумма">`;
+
+        if (classes === "income"){  
+            constI++;
+            if (constI < 3){ 
+                document.querySelector(`.${classes}`).append(newBlock);
+                incomePlus.before(newBlock);  
+            } else {
+                incomePlus.style.display = "none";
+            }
+
+        } else if (classes === "expenses"){
+            constE++;
+            if (constE > 2){ 
+                expensesPlus.style.display = "none";
+            } else {
+                document.querySelector(`.${classes}`).append(newBlock);
+                expensesPlus.before(newBlock);  
+            }
         }
     }
     
-    getExpensesMonth() {
+
+    getExpensesIncomesMonth(){
         const _this = this;
-        const keys = Object.keys(_this.expenses);
-        for (const item of keys){
-            _this.expensesMonth += parseInt(_this.expenses[item], 10);
+        let keys = Object.keys(this.income);
+        for (let items in this.income){
+            _this.incomeMonth += parseInt(_this.income[items], 10);
         }
-    }
-    
-    getIncomeMonth(){
-        const _this = this;
-        const keys = Object.keys(this.income);
-        for (const item of keys){
-            _this.incomeMonth += parseInt(_this.income[item], 10);
+        keys = Object.keys(this.expenses);
+        for (let items of keys){
+            _this.expensesMonth += parseInt(_this.expenses[items], 10);
         }
     }
     
@@ -212,7 +201,6 @@ class AppData{
     }
     
     getAddIncomeItem() {
-        const _this = this;
         addIncomeItem.forEach(function(item){
             const itemValue = item.value.trim();
             if (itemValue !== '') {
@@ -289,8 +277,7 @@ class AppData{
     
     addEventListeners() {
         calculate.addEventListener('click', appData.start);
-        expensesPlus.addEventListener('click', appData.addExpensesBlock);
-        incomePlus.addEventListener('click', appData.addIncomeBlock);
+        plusButt.forEach((item) => item.addEventListener('click', appData.addExpIncBlock));
         periodSelect.addEventListener('mousemove', function(){
             appData.showInvest();
             document.getElementsByClassName("period-amount")[0].innerHTML = periodSelect.value;
